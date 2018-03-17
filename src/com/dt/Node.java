@@ -37,6 +37,18 @@ public class Node {
         return falseBranch;
     }
 
+    public void setTrueBranch(Node trueBranch) {
+        this.trueBranch = trueBranch;
+    }
+
+    public void setFalseBranch(Node falseBranch) {
+        this.falseBranch = falseBranch;
+    }
+
+    public void setResults(HashMap<String, Double> results) {
+        this.results = results;
+    }
+
     public static class NodeBuilder {
         private int column;
         private String value;

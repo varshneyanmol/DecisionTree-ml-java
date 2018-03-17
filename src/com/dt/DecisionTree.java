@@ -221,4 +221,43 @@ public class DecisionTree {
 
     }
 
+    public void prune(Node tree, double minGain) {
+        if (tree.getTrueBranch().getResults() == null) {
+            prune(tree.getTrueBranch(), minGain);
+        }
+        if (tree.getFalseBranch().getResults() == null) {
+            prune(tree.getFalseBranch(), minGain);
+        }
+
+        if (tree.getTrueBranch().getResults() != null && tree.getFalseBranch().getResults() != null) {
+
+            Node trueBranch = tree.getTrueBranch();
+            Node falseBranch = tree.getFalseBranch();
+
+            List<List<String>> tb = new ArrayList<>();
+            List<List<String>> fb = new ArrayList<>();
+            List<List<String>> cb = new ArrayList<>();
+            for (Map.Entry entry : trueBranch.getResults().entrySet()) {
+                for (double i = 0; i < (double) entry.getValue(); i++) {
+                    tb.add(Arrays.asList((String) entry.getKey()));
+                    cb.add(Arrays.asList((String) entry.getKey()));
+                }
+            }
+            for (Map.Entry entry : falseBranch.getResults().entrySet()) {
+                for (double i = 0; i < (double) entry.getValue(); i++) {
+                    fb.add(Arrays.asList((String) entry.getKey()));
+                    cb.add(Arrays.asList((String) entry.getKey()));
+                }
+            }
+
+            double delta = entropy(cb) - (entropy(tb) + entropy(fb));
+            if (delta < minGain) {
+                tree.setTrueBranch(null);
+                tree.setFalseBranch(null);
+                tree.setResults(uniqueCounts(cb));
+            }
+
+        }
+    }
+
 }
